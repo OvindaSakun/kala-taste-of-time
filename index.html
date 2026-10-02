@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KĀLA - The Taste of Time</title>
+    <link rel="icon" href="48x48.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #371f12;
+            --text-color: #e8d9c5;
+            --accent-color: #e8d9c5;
+            --nav-bg: rgba(55, 31, 18, 0.95);
+            --border-color: rgba(232, 217, 197, 0.2);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #e8d9c5;
+            --text-color: #371f12;
+            --accent-color: #371f12;
+            --nav-bg: rgba(232, 217, 197, 0.95);
+            --border-color: rgba(55, 31, 18, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, .brand {
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent-color);
+            font-weight: 400;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out, background-color 0.4s ease;
+        }
+        #splash-screen img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        .splash-hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+        .nav-brand {
+            font-size: 1.8rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--accent-color);
+            transition: color 0.4s ease;
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease, color 0.4s ease;
+            text-transform: uppercase;
+        }
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .theme-toggle:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        /* Section Common */
+        header, section {
+            padding: 80px 5%;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        header.visible, section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        header {
+            padding-top: 150px;
+        }
+
+        /* Typography & Elements */
+        .section-title {
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .section-subtitle {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        .text-content {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            font-weight: 300;
+        }
+        .text-content-large {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            font-weight: 300;
+        }
+
+        /* Logo styling */
+        header img.logo {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 0 auto 30px auto;
+            display: block;
+        }
+        [data-theme="light"] .logo {
+            filter: invert(1);
+        }
+
+        /* Required Image Class */
+        .kala-image {
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .img-container {
+            margin-top: 30px;
+            margin-bottom: 60px;
+        }
+
+        /* Ritual Steps */
+        .ritual-step {
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin: 0 auto 40px auto;
+            max-width: 800px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        [data-theme="light"] .ritual-step {
+            background: rgba(0,0,0,0.03);
+        }
+        .ritual-step:hover {
+            transform: translateY(-5px);
+        }
+        .ritual-step h3 {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+        .ritual-step p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .content-img {
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Grid for Ritual Set */
+        .ritual-set-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            text-align: left;
+            margin-top: 40px;
+        }
+        @media(min-width: 768px) {
+            .ritual-set-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .ritual-item {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .ritual-item:hover {
+            transform: translateY(-5px);
+        }
+        [data-theme="light"] .ritual-item {
+            background: rgba(0,0,0,0.03);
+        }
+        .ritual-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+        .footer-brand {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+        }
+        .footer-tagline {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-style: italic;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+        .footer-pillars {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: var(--accent-color);
+        }
+        .instagram-link {
+            display: inline-block;
+            color: var(--bg-color);
+            background-color: var(--text-color);
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+        }
+        .instagram-link:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+
+        /* Back to top */
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        #back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        #back-to-top:hover {
+            transform: translateY(-3px);
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            header {
+                padding-top: 180px;
+            }
+            .brand[style] {
+                font-size: 3rem !important;
+                letter-spacing: 6px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <img src="KĀLA (3)-2.png" alt="KĀLA Splash">
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="nav-brand">KĀLA</a>
+        <div class="nav-links">
+            <a href="#" onclick="event.preventDefault()">Home</a>
+            <a href="#" onclick="event.preventDefault()">About Us</a>
+            <button id="theme-toggle" class="theme-toggle">Dark Mode</button>
+        </div>
+    </nav>
+
+    <!-- Header / Hero Section -->
+    <header id="hero">
+        <img class="logo" src="KĀLA (3)-2.png" alt="KĀLA Logo">
+        <h1 class="brand" style="font-size: 4rem; letter-spacing: 10px; margin-bottom: 20px;">KĀLA</h1>
+        <p class="text-content-large">A contemporary Sri Lankan slow-food ritual that reconnects you with the tree, the maker, and the time behind every drop of Kithul.</p>
+        <div class="img-container">
+            <img src="IMG-20261002-WA0047.jpg" alt="KĀLA Hero" class="kala-image" loading="lazy">
+        </div>
+    </header>
+
+    <main>
+        <!-- Section 1 -->
+        <section id="section-1">
+            <h2 class="section-title">ENTER THE RITUAL</h2>
+            <p class="text-content">Kithul is more than a taste.<br>Behind every piece of Kithul jaggery is a tree, a maker, and hours of patience. Kala transforms this story into a ritual of slowing down, noticing and appreciating.</p>
+        </section>
+
+        <!-- Section 2 -->
+        <section id="section-2">
+            <h2 class="section-title">THE STORY — The Taste of Time</h2>
+            
+            <div style="margin-top: 40px;">
+                <h3 class="section-subtitle">Where the story begins</h3>
+                <p class="text-content">The story begins with the Kithul tree.<br>Its sap is carefully collected through traditional knowledge and patience, then transformed into Kithul jaggery through hours of skilled labour.</p>
+                <div class="img-container">
+                    <img src="IMG-20261002-WA0048.jpg" alt="Where the story begins" class="kala-image" loading="lazy">
+                </div>
+            </div>
+
+            <div>
+                <h3 class="section-subtitle">The maker</h3>
+                <p class="text-content">What reaches the consumer as a simple piece of jaggery carries knowledge that has been passed through practice, patience and experience.<br>Kala brings attention back to the people behind the product — the makers whose skills make this taste possible.</p>
+                <div class="img-container">
+                    <img src="IMG-20261002-WA0049.jpg" alt="The maker" class="kala-image" loading="lazy">
+                </div>
+            </div>
+
+            <div>
+                <h3 class="section-subtitle">The end of the tree's productive life</h3>
+                <p class="text-content">When a Kithul tree can no longer provide sap, its story does not have to end.<br>The wood can be transformed into something that tells its journey, So this ritual has become a bridge that connects the story of the tree.</p>
+                <div class="img-container">
+                    <img src="IMG-20261002-WA0051.jpg" alt="The tree's productive life" class="kala-image" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section id="section-3">
+            <h2 class="section-title">THE RITUAL</h2>
+            <p class="text-content" style="margin-bottom: 50px;">Kala turns the simple act of enjoying Kithul jaggery and herbal tea into a sequence of teachings.</p>
+
+            <div class="ritual-step">
+                <h3 style="text-transform: uppercase;">PRESENCE</h3>
+                <p>I notice</p>
+                <img class="content-img" src="IMG-20261002-WA0052.jpg" alt="PRESENCE" loading="lazy">
+            </div>
+
+            <div class="ritual-step">
+                <h3 style="text-transform: uppercase;">PATIENCE</h3>
+                <p>I wait</p>
+                <img class="content-img" src="IMG-20261002-WA0053.jpg" alt="PATIENCE" loading="lazy">
+            </div>
+
+            <div class="ritual-step">
+                <h3 style="text-transform: uppercase;">APPRECIATION</h3>
+                <p>I understand</p>
+                <img class="content-img" src="IMG-20261002-WA0054.jpg" alt="APPRECIATION" loading="lazy">
+            </div>
+
+            <div class="ritual-step">
+                <h3 style="text-transform: uppercase;">GRATITUDE</h3>
+                <p>I value</p>
+                <img class="content-img" src="IMG-20261002-WA0055.jpg" alt="GRATITUDE" loading="lazy">
+            </div>
+
+            <div style="margin-top: 40px;">
+                <p class="text-content-large">The ritual is an invitation to slow down and become aware of the present moment. Each action connects the senses with the story of the KitHul tree, the maker and the time behind the jaggery.</p>
+            </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section id="section-4">
+            <h2 class="section-title">THE KĀLA RITUAL SET</h2>
+            <p class="text-content">A handcrafted set designed to hold the complete Kithul slow-food experience.</p>
+            
+            <div class="ritual-set-grid">
+                <div class="ritual-item">
+                    <h3>THE KITUL WOOD BOWL</h3>
+                    <p>A handcrafted bowl that holds the Kithul jaggery at the centre of the ritual.</p>
+                </div>
+                <div class="ritual-item">
+                    <h3>THE SPIRAL LID</h3>
+                    <p>A functional lid that transforms serving into an intentional act. The spiral guides the spoon towards the jaggery, encouraging the user to take only what is needed.</p>
+                </div>
+                <div class="ritual-item">
+                    <h3>THE SCRAPING SPOON</h3>
+                    <p>A small spoon designed specifically to collect Kithul jaggery through the spiral pathway.</p>
+                </div>
+                <div class="ritual-item">
+                    <h3>THE HERBAL TEA Cup</h3>
+                    <p>A Kithul wood cup designed to hold the accompanying herbal infusion and bring the warmth, texture and character of the material into the ritual.</p>
+                </div>
+                <div class="ritual-item" style="grid-column: 1 / -1; max-width: 500px; margin: 0 auto; width: 100%;">
+                    <h3 style="text-align: center;">THE TRAY</h3>
+                    <p style="text-align: center;">A serving surface that brings the elements together and creates a dedicated space for the ritual.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5 -->
+        <section id="section-5">
+            <h2 class="section-title">KITHUL JAGGERY</h2>
+            <h3 class="section-subtitle" style="margin-top: 30px;">Choose Your Infusion</h3>
+            
+            <p class="text-content" style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; letter-spacing: 2px; margin: 30px auto; color: var(--accent-color);">
+                IRAMUSU | RANAWARA | BELIMAL
+            </p>
+
+            <p class="text-content">A traditional herbal drink commonly prepared in Sri Lankan households.</p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <h2 class="brand footer-brand">KĀLA</h2>
+        <p class="footer-tagline">The taste of time</p>
+        <p class="footer-pillars">The Tree | The Maker | The Consumer</p>
+        
+        <div style="margin-top: 40px;">
+            <a href="https://www.instagram.com/the_taste_of_time_?stkn=ZXNhY3Z5bG4weTRr&utm_source=qr" target="_blank" class="instagram-link">Instagram for more info and a complete guide for the ritual</a>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button id="back-to-top" aria-label="Back to Top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                document.body.removeAttribute('data-theme');
+                themeToggle.textContent = 'Dark Mode';
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+                themeToggle.textContent = 'Light Mode';
+            }
+        });
+
+        // Splash Screen Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.classList.add('splash-hidden');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 500);
+            }, 2000); // Wait 2s before hiding
+        });
+
+        // Intersection Observer for scroll animations
+        const sections = document.querySelectorAll('section, header');
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Back to Top Button Logic
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
